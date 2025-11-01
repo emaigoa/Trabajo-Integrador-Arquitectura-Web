@@ -1,15 +1,15 @@
-/*import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+
+// importa tus componentes reales (mirá tus rutas)
 import { EncabezadoComponent } from './componentes/encabezado/encabezado';
 import { FooterComponent } from './componentes/footer/footer';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [RouterOutlet, EncabezadoComponent, FooterComponent],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
-export class App {
-  protected readonly title = signal('mini-e-commerce');
-}
-*/
+export class AppComponent {}

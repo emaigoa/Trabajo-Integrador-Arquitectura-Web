@@ -1,0 +1,27 @@
+<h3 class="mb-3">Carrito</h3>
+
+@if (cart.items().length === 0) {
+  <div class="alert alert-info">
+    No hay productos en el carrito. <a routerLink="/">Ir al catálogo</a>
+  </div>
+} @else {
+  <ul class="list-group mb-3">
+    @for (p of cart.items(); track p.id) {
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          <strong>{{ p.name }}</strong>
+          <div class="small text-muted">{{ p.category }}</div>
+        </div>
+        <div>
+          <span class="me-3">$ {{ p.price }}</span>
+          <button class="btn btn-sm btn-outline-danger" (click)="cart.remove(p.id)">Quitar</button>
+        </div>
+      </li>
+    }
+  </ul>
+
+  <div class="d-flex justify-content-between align-items-center">
+    <strong>Total: $ {{ cart.total() }}</strong>
+    <a class="btn btn-primary" routerLink="/envio">Iniciar compra</a>
+  </div>
+}

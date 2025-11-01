@@ -1,0 +1,23 @@
+<div class="row g-3 align-items-center mb-3">
+  <div class="col-md-5">
+    <input class="form-control" [(ngModel)]="query" placeholder="Buscar productos...">
+  </div>
+  <div class="col-md-7 d-flex flex-wrap gap-2">
+    <button class="btn btn-outline-secondary btn-sm" [class.active]="!selectedCategory()" (click)="selectCat()">
+      Todas
+    </button>
+    @for (c of categories(); track c.id) {
+      <button class="btn btn-outline-secondary btn-sm" [class.active]="selectedCategory()===c.name" (click)="selectCat(c.name)">
+        {{ c.name }}
+      </button>
+    }
+  </div>
+</div>
+
+<div class="row row-cols-2 row-cols-md-4 g-3">
+  @for (p of filtered(); track p.id) {
+    <div class="col">
+      <app-product-card [product]="p" (add)="addToCart($event)"></app-product-card>
+    </div>
+  }
+</div>

@@ -1,0 +1,12 @@
+<h3>Checkout</h3>
+
+<div class="mb-3">
+  <label class="form-label">Dirección de entrega</label>
+  <input class="form-control" [(ngModel)]="address" placeholder="Ej: Av. Colón 1234, Mar del Plata">
+</div>
+
+<button class="btn btn-success" (click)="submit()" [disabled]="!address">Confirmar pedido</button>
+
+@if (submitted()) {
+  <div class="alert alert-success mt-3">Pedido registrado (demo). Próximo paso: cálculo de envío automático.</div>
+}

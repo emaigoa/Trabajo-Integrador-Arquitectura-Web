@@ -1,0 +1,6 @@
+<h3>Login</h3>
+<form (ngSubmit)="submit()" #f="ngForm" class="row g-2">
+  <div class="col-md-4"><input class="form-control" [(ngModel)]="user" name="user" required placeholder="Usuario"></div>
+  <div class="col-md-4"><input class="form-control" [(ngModel)]="email" name="email" type="email" required placeholder="Email"></div>
+  <div class="col-md-4 d-grid"><button class="btn btn-primary" type="submit" [disabled]="!f.valid">Ingresar</button></div>
+</form>
