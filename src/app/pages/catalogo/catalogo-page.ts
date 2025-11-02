@@ -21,8 +21,8 @@ export class CatalogoPage implements OnInit {
   selectedCategory = signal<string | null>(null);
 
   ngOnInit(): void {
-    this.store.getProducts().subscribe(d => this.products.set(d));
-    this.store.getCategories().subscribe(c => this.categories.set(c));
+    this.store.getProducts().subscribe((d: Product[]) => this.products.set(d));
+    this.store.getCategories().subscribe((c: Category[]) => this.categories.set(c));
     this.store.getPromos().subscribe(); // 3er GET
   }
 

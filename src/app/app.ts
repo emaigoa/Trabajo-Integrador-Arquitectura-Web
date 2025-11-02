@@ -1,7 +1,6 @@
 /*import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { EncabezadoComponent } from './componentes/encabezado/encabezado';
-import { FooterComponent } from './componentes/footer/footer';
+
 
 @Component({
   selector: 'app-root',
