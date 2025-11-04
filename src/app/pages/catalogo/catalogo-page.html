@@ -14,10 +14,34 @@
   </div>
 </div>
 
-<div class="row row-cols-2 row-cols-md-4 g-3">
+
+@if (loading()) {
+  <div class="row row-cols-2 row-cols-md-6 g-3">
+    @for (v of vacias; track v)  {
+      <div class="col">
+        <div class="card h-100">
+          <img src="load.gif" class="card-img-top p-4" alt="Cargando...">
+          <div class="card-body">
+            <h6 class="card-title placeholder-glow">
+              <span class="placeholder col-8"></span>
+            </h6>
+            <p class="card-text placeholder-glow">
+              <span class="placeholder col-6"></span>
+            </p>
+            <div class="d-grid">
+              <span class="btn btn-outline-secondary disabled placeholder col-6 mx-auto"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+} @else {
+  <div class="tarj row row-cols-2 row-cols-md-6 g-3">
   @for (p of filtered(); track p.id) {
     <div class="col">
       <app-product-card [product]="p" (add)="addToCart($event)"></app-product-card>
     </div>
   }
 </div>
+}

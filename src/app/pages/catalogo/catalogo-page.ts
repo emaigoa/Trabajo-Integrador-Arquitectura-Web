@@ -4,26 +4,37 @@ import { FormsModule } from '@angular/forms';
 import { StoreService, Product, Category } from '../../servicios/tienda';
 import { CartService } from '../../servicios/carrito';
 import { ProductCardComponent } from '../../componentes/tarjeta/tarjeta';
+import { combineLatest } from 'rxjs';
+import { tap, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-catalog',
   standalone: true,
   imports: [CommonModule, FormsModule, ProductCardComponent],
-  templateUrl: './catalogo-page.html'
+  templateUrl: './catalogo-page.html',
+  styleUrl: './catalogo-page.css'
 })
 export class CatalogoPage implements OnInit {
   private store = inject(StoreService);
   private cart = inject(CartService);
 
+  loading = signal(true);
+  vacias = Array.from({ length: 12 });
   products = signal<Product[]>([]);
   categories = signal<Category[]>([]);
   query = signal('');
   selectedCategory = signal<string | null>(null);
 
   ngOnInit(): void {
-    this.store.getProducts().subscribe((d: Product[]) => this.products.set(d));
-    this.store.getCategories().subscribe((c: Category[]) => this.categories.set(c));
-    this.store.getPromos().subscribe(); // 3er GET
+    // armamos observables que además populan los signals
+    const products$   = this.store.getProducts().pipe(tap(d => this.products.set(d)));
+    const categories$ = this.store.getCategories().pipe(tap(c => this.categories.set(c)));
+
+    // cuando llegan por primera vez ambas colecciones, apagamos el loading
+    combineLatest([products$, categories$]).pipe(take(1)).subscribe(() => this.loading.set(false));
+
+    // si también llamás getPromos(), no hace falta esperarlo para el loading
+    this.store.getPromos().subscribe();
   }
 
   filtered = computed(() => {
