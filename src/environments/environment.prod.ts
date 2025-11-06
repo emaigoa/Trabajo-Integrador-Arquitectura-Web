@@ -13,10 +13,10 @@ export const environment = {
 
   // OIDC (reemplazá por tu IdP en prod si no es localhost)
   // Si por ahora seguís con WSO2 local en pruebas de prod, dejalo igual.
-  oidcIssuer: "https://tu-dominio-idp/oauth2",      // p.ej. "https://idp.tuapp.com/oauth2"
-  oidcClientId: "REEMPLAZAR_CLIENT_ID_PROD",
-  wso2RegisterUrl: "https://tu-dominio-idp/myaccount/register",
+  oidcIssuer: "hhttps://miniecommercearqweb.netlify.app/oauth2",      // p.ej. "https://idp.tuapp.com/oauth2"
+  oidcClientId: "o2B5f_ZslC19ctDZvL9tYxKUUNoa",
+  wso2RegisterUrl: "https://miniecommercearqweb.netlify.app/myaccount/register",
 
   // URL pública del frontend en prod
-  appBaseUrl: "https://tu-dominio-frontend"
+  appBaseUrl: "https://miniecommercearqweb.netlify.app"
 };

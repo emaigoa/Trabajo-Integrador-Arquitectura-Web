@@ -29,14 +29,14 @@ import { AuthService } from './servicios/autenticacion';
 
 // Detectar si estamos en browser SIN usar inject()
 const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
-
+const base = environment.oidcIssuer.replace(/\/$/, ''); // sin barra final
 /** ⚙️ Config OIDC (endpoints manuales de WSO2) */
 const authConfig: AuthConfig = {
-  loginUrl: 'https://localhost:9443/oauth2/authorize',
-  tokenEndpoint: 'https://localhost:9443/oauth2/token',
-  userinfoEndpoint: 'https://localhost:9443/oauth2/userinfo',
-  revocationEndpoint: 'https://localhost:9443/oauth2/revoke',
-  logoutUrl: 'https://localhost:9443/oidc/logout',
+   loginUrl:        `${base}/authorize`,
+  tokenEndpoint:   `${base}/token`,
+  userinfoEndpoint:`${base}/userinfo`,
+  revocationEndpoint: `${base}/revoke`,
+  logoutUrl:       `${base.replace(/\/oauth2$/, '')}/oidc/logout`, // ruta OIDC
 
   // ✅ ABSOLUTO, sin window (no depende de SSR)
   redirectUri: `${environment.appBaseUrl}/callback`,
