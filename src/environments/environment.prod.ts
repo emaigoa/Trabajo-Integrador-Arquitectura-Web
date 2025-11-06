@@ -13,7 +13,7 @@ export const environment = {
 
   // OIDC (reemplazá por tu IdP en prod si no es localhost)
   // Si por ahora seguís con WSO2 local en pruebas de prod, dejalo igual.
-  oidcIssuer: "https://api.asgardeo.io/t/minimarket/oauth2/token",      // p.ej. "https://idp.tuapp.com/oauth2"
+  oidcIssuer: "https://api.asgardeo.io/t/minimarket/oauth2",      // p.ej. "https://idp.tuapp.com/oauth2"
   oidcClientId: "mi0f3E91B2locagnWe5fzu7IIG8a",
   wso2RegisterUrl: "https://miniecommercearqweb.netlify.app/myaccount/register",
 
