@@ -1,0 +1,77 @@
+<div class="container my-5" style="max-width: 400px;">
+  <h3 class="mb-4 text-center text-primary">Simulación de Login</h3>
+
+  <div class="card p-4 shadow-lg border-0">
+    <!-- El ngSubmit llama a la función submitLogin() del componente TS -->
+    <form (ngSubmit)="submitLogin()" class="d-grid gap-3">
+
+      <!-- Campo Nombre de Usuario (Binding con user.username) -->
+      <div class="form-floating">
+        <input type="text"
+               id="username"
+               class="form-control"
+               [(ngModel)]="user.username"
+               name="username"
+               placeholder="Nombre Completo"
+               required>
+        <label for="username">Nombre de Usuario</label>
+      </div>
+
+      <!-- Campo Email (Binding con user.email) -->
+      <div class="form-floating">
+        <input type="email"
+               id="email"
+               class="form-control"
+               [(ngModel)]="user.email"
+               name="email"
+               placeholder="ejemplo@correo.com"
+               required>
+        <label for="email">Email de Usuario</label>
+      </div>
+
+      <!-- NUEVO: Zona de Error de Validación -->
+      <!-- Se muestra si la Signal errorMensaje() tiene texto -->
+      @if (errorMensaje()) {
+        <div class="alert alert-danger py-2 px-3 small" role="alert">
+          {{ errorMensaje() }}
+        </div>
+      }
+
+      <!-- Botón de Envío -->
+      <button type="submit" class="btn btn-warning btn-lg fw-bold mt-2">
+        Enviar
+      </button>
+    </form>
+  </div>
+
+  <!-- Zona de Resultados (Muestra el mensaje y el objeto) -->
+  <!-- @if verifica si la Signal mensaje() tiene contenido -->
+  @if (mensaje()) {
+    <div class="card shadow border-success mt-4 animate__animated animate__fadeInUp">
+      <div class="card-body text-center p-4">
+
+        <!-- Icono de Éxito (SVG) -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-check-circle-fill text-success mb-3" viewBox="0 0 16 16">
+          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </svg>
+
+        <!-- Mensaje de Éxito -->
+        <h4 class="card-title text-success">{{ mensaje() }}</h4>
+
+        <p class="text-muted mb-3">Has ingresado los siguientes datos (simulación exitosa):</p>
+
+        <!-- Desglose de Datos (en lugar del JSON) -->
+        <ul class="list-group list-group-flush text-start">
+          <li class="list-group-item d-flex justify-content-between px-0">
+            <strong>Usuario Registrado:</strong>
+            <span>{{ dataEnviada().username }}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between px-0">
+            <strong>Email de Contacto:</strong>
+            <span>{{ dataEnviada().email }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  }
+</div>

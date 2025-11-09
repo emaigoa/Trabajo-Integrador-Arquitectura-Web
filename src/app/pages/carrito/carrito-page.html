@@ -1,27 +1,68 @@
-<h3 class="mb-3">Carrito</h3>
+<h3 class="mb-3">Carrito de Compras</h3>
 
 @if (cart.items().length === 0) {
-  <div class="alert alert-info">
-    No hay productos en el carrito. <a routerLink="/">Ir al catálogo</a>
-  </div>
-} @else {
-  <ul class="list-group mb-3">
-    @for (p of cart.items(); track p.id) {
-      <li class="list-group-item d-flex justify-content-between align-items-center">
-        <div>
-          <strong>{{ p.name }}</strong>
-          <div class="small text-muted">{{ p.category }}</div>
-        </div>
-        <div>
-          <span class="me-3">$ {{ p.price }}</span>
-          <button class="btn btn-sm btn-outline-danger" (click)="cart.remove(p.id)">Quitar</button>
-        </div>
-      </li>
-    }
-  </ul>
 
-  <div class="d-flex justify-content-between align-items-center">
-    <strong>Total: $ {{ cart.total() }}</strong>
-    <a class="btn btn-primary" routerLink="/envio">Iniciar compra</a>
-  </div>
+<div class="alert alert-info"> No hay productos en el carrito. <a routerLink="/">Ir al catálogo</a> </div> } @else { <ul class="list-group mb-3">
+
+<!-- Se renombró 'item' a 'cartItem' para forzar la actualización del compilador -->
+@for (cartItem of cart.items(); track cartItem.product.id) {
+
+  <!--
+    NOTA DE DISEÑO:
+    Se quitó 'justify-content-between' y se usa 'ms-auto' (margin-left: auto)
+    en los controles para empujarlos a la derecha.
+  -->
+  <li class="list-group-item d-flex align-items-center">
+
+    <!-- 1. Bloque de Imagen + Info (Crece) -->
+    <div class="d-flex align-items-center grow me-3">
+
+      <!-- NUEVO: Imagen del Producto -->
+      @if (cartItem.product.img) {
+        <img [src]="cartItem.product.img" [alt]="cartItem.product.name"
+             class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;">
+      } @else {
+        <!-- Placeholder si no hay imagen -->
+        <div class="rounded me-3 bg-light d-flex align-items-center justify-content-center"
+             style="width: 60px; height: 60px; font-size: 0.8em; color: #aaa;">
+          (sin foto)
+        </div>
+      }
+
+      <!-- Info (Nombre, Cat, Precio Unit) -->
+      <div>
+        <strong>{{ cartItem.product.name }}</strong>
+        <div class="small text-muted">{{ cartItem.product.category }}</div>
+        <div class="small text-muted">Precio unitario: $ {{ cartItem.product.price | number:'1.2-2' }}</div>
+      </div>
+    </div>
+
+    <!-- 2. Controles de Cantidad (con ms-auto) -->
+    <div class="d-flex align-items-center ms-auto">
+      <button class="btn btn-outline-secondary btn-sm" (click)="cart.decrease(cartItem.product.id)">
+        &ndash;
+      </button>
+
+      <span class="mx-3 fw-bold" style="min-width: 20px; text-align: center;">
+        {{ cartItem.quantity }}
+      </span>
+
+      <button class="btn btn-outline-secondary btn-sm" (click)="cart.add(cartItem.product)">
+        +
+      </button>
+    </div>
+
+    <!-- 3. Precio Total por Línea y Botón Quitar -->
+    <div class="text-end ms-3" style="min-width: 100px;">
+      <span class="fw-bold fs-5">$ {{ cartItem.product.price * cartItem.quantity | number:'1.2-2' }}</span>
+
+      <button class="btn btn-sm btn-link text-danger p-0 ms-2" (click)="cart.removeItemCompletely(cartItem.product.id)" title="Quitar producto">
+        Quitar
+      </button>
+    </div>
+
+  </li>
 }
+</ul>
+
+<div class="d-flex justify-content-between align-items-center"> <strong>Total: $ {{ cart.total() | number:'1.2-2' }}</strong> <a class="btn btn-primary" routerLink="/envio">Iniciar compra</a> </div> }
