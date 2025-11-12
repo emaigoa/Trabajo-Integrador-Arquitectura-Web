@@ -1,0 +1,175 @@
+/* * Estilos personalizados para el componente de Login Simulado.
+ * Reemplaza las clases de Bootstrap para un control total.
+ */
+
+/* Fondo de la página y fuente base */
+:host {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  display: block;
+  padding: 40px 20px;
+  background-color: #f4f7f6; /* Un gris muy claro para la página */
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* Contenedor principal */
+.login-container {
+  max-width: 450px;
+  margin: 0 auto;
+}
+
+/* Estilo base para las tarjetas (Login y Éxito) */
+.login-card, .success-card {
+  background-color: #ffffff;
+  border-radius: 12px; /* Esquinas más suaves */
+  padding: 2.5rem; /* Más espaciado interno */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); /* Sombra suave */
+  border: 1px solid #e0e0e0;
+}
+
+.login-card h3 {
+  text-align: center;
+  color: #2c3e50; /* Azul oscuro */
+  margin-top: 0;
+  font-weight: 600;
+}
+
+.login-card .subtitle {
+  text-align: center;
+  color: #888;
+  font-size: 0.9rem;
+  margin-top: -1rem;
+  margin-bottom: 2rem;
+}
+
+/* Grupo de Formulario (Label + Input) */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.form-group .form-control {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box; /* Asegura que el padding no rompa el ancho */
+}
+
+/* Efecto de Foco en los inputs */
+outline {
+  outline: none;
+  border-color: #0d6efd; /* Azul primario */
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
+}
+
+/* Botón de Envío */
+.submit-button {
+  width: 100%;
+  padding: 15px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #212529;
+  background-color: #ffc107; /* Amarillo (Warning) */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  margin-top: 1rem;
+}
+
+/* Efecto Hover en el Botón */
+.submit-button:hover {
+  background-color: #ffca2c;
+  transform: translateY(-2px); /* Eleva el botón */
+  box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3);
+}
+
+/* Mensaje de Error */
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  padding: 12px 15px;
+  text-align: center;
+  font-weight: 500;
+  margin-bottom: 1.5rem; /* Añadido para separar del botón */
+}
+
+/* Tarjeta de Éxito */
+.success-card {
+  margin-top: 2rem;
+  border-color: #198754; /* Verde (Éxito) */
+  text-align: center;
+  /* Animación de entrada */
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.success-icon {
+  width: 48px;
+  height: 48px;
+  color: #198754;
+  margin-bottom: 1rem;
+}
+
+.success-card h4 {
+  color: #198754;
+  margin-top: 0;
+  font-weight: 600;
+}
+
+.success-card .success-subtitle {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+/* Lista de Datos de Éxito */
+.data-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.data-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.data-list li:last-child {
+  border-bottom: none;
+}
+
+.data-list li strong {
+  color: #333;
+}
+
+.data-list li span {
+  color: #555;
+  font-weight: 500;
+}
+
+/* Animación de entrada */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

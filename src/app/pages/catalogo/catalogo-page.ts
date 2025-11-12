@@ -1,7 +1,7 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { StoreService, Product, Category } from '../../servicios/tienda';
+import { StoreService, Product, Category, Promo } from '../../servicios/tienda';
 import { CartService } from '../../servicios/carrito';
 import { ProductCardComponent } from '../../componentes/tarjeta/tarjeta';
 import { combineLatest } from 'rxjs';
@@ -22,19 +22,18 @@ export class CatalogoPage implements OnInit {
   vacias = Array.from({ length: 12 });
   products = signal<Product[]>([]);
   categories = signal<Category[]>([]);
+  promos = signal<Promo[]>([]);
   query = signal('');
   selectedCategory = signal<string | null>(null);
 
   ngOnInit(): void {
-    // armamos observables que además populan los signals
     const products$   = this.store.getProducts().pipe(tap(d => this.products.set(d)));
     const categories$ = this.store.getCategories().pipe(tap(c => this.categories.set(c)));
+    const promos$     = this.store.getPromos().pipe(tap(p => this.promos.set(p)));
 
-    // cuando llegan por primera vez ambas colecciones, apagamos el loading
-    combineLatest([products$, categories$]).pipe(take(1)).subscribe(() => this.loading.set(false));
-
-    // si también llamás getPromos(), no hace falta esperarlo para el loading
-    this.store.getPromos().subscribe();
+    combineLatest([products$, categories$, promos$]).pipe(take(1)).subscribe(() => {
+      this.loading.set(false);
+    });
   }
 
   filtered = computed(() => {
@@ -45,6 +44,49 @@ export class CatalogoPage implements OnInit {
     );
   });
 
-  selectCat(c?: string){ this.selectedCategory.set(c ?? null); }
-  addToCart(p: Product){ this.cart.add(p); }
+  selectCat(c?: string){
+    this.selectedCategory.set(c ?? null);
+  }
+
+  addToCart(p: Product){
+    const promo = this.promos().find(pr => pr.categoryName === p.category);
+
+    if (!promo) {
+      // Sin promoción
+      this.cart.add(p);
+      return;
+    }
+
+    // Manejo de promoción 2x1
+    if (promo.promoType === '2x1') {
+      // Para 2x1, simplemente marcamos el producto con la info de la promo
+      // La lógica de aplicar el descuento se hará en el carrito cuando haya 2+ unidades
+      const productWith2x1 = {
+        ...p,
+        promoInfo: promo.title,
+        promoType: '2x1'
+      };
+      this.cart.add(productWith2x1);
+      return;
+    }
+
+    // Manejo de descuento porcentual
+    if (promo.discount) {
+      const discountAmount = p.price * (promo.discount / 100);
+      const newPrice = parseFloat((p.price - discountAmount).toFixed(2));
+
+      const discountedProduct = {
+        ...p,
+        price: newPrice,
+        originalPrice: p.price,
+        promoInfo: promo.title
+      };
+
+      this.cart.add(discountedProduct);
+      return;
+    }
+
+    // Sin descuento aplicable
+    this.cart.add(p);
+  }
 }

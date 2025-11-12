@@ -15,17 +15,17 @@ const loadSignedOut  = () => import('./pages/cerrar/cerrar-page').then(m => m.C
 class CallbackStubComponent {}
 
 export const routes: Routes = [
-  { path: 'callback', loadComponent: loadCallback, canMatch: [() => isPlatformBrowser(inject(PLATFORM_ID))] },
-  { path: 'callback', component: CallbackStubComponent },
+  { path: 'callback', loadComponent: loadCallback, canMatch: [() => isPlatformBrowser(inject(PLATFORM_ID))] },
+  { path: 'callback', component: CallbackStubComponent },
 
-  // ✅ /signed-out usa el componente CerrarPage (export real del archivo)
-  { path: 'cerrar', loadComponent: loadSignedOut },
 
-  // ✅ NUEVA RUTA PARA EL COMPONENTE DE SIMULACIÓN DE LOGIN (Componente 3)
+  { path: 'cerrar', loadComponent: loadSignedOut },
+
+
   { path: 'login-simulado', component: LoginSimulacionComponent },
 
-  { path: '', component: CatalogoPage },
-  { path: 'carrito', component: CarritoPage },
-  { path: 'envio', component: EnvioPage },
-  { path: '**', redirectTo: '' },
+  { path: '', component: CatalogoPage },
+  { path: 'carrito', component: CarritoPage },
+  { path: 'envio', component: EnvioPage },
+  { path: '**', redirectTo: '' },
 ];

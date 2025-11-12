@@ -1,3 +1,11 @@
+
+.price-container {
+  min-height: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .card-hover-effect {
   /* ... (estilos de hover existentes) ... */
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;

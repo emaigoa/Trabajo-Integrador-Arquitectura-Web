@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core'; // 1. Importar 'signal'
+import { Component, EventEmitter, Input, Output, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import type { Product } from '../../servicios/tienda';
+import type { Product, Promo } from '../../servicios/tienda';
 
 @Component({
   selector: 'app-product-card',
@@ -12,32 +12,46 @@ import type { Product } from '../../servicios/tienda';
 export class ProductCardComponent {
   @Input() product!: Product;
   @Output() add = new EventEmitter<Product>();
+  @Input() promos: Promo[] = [];
 
-  // 7. Signal para controlar la visibilidad de la animación "+1"
   showPlusOne = signal(false);
 
-  /**
-   * 8. Nueva función que maneja el clic en "Agregar"
-   * Emite el evento y activa la animación.
-   */
-  onAddClick(event: MouseEvent) {
-    // Detiene la propagación para que el clic no afecte a la tarjeta (buena práctica)
-    event.stopPropagation();
+  // Signal computada para encontrar la promo aplicable
+  applicablePromo = computed(() => {
+    if (!this.product || !this.promos) {
+      return null;
+    }
+    return this.promos.find(p => p.categoryName === this.product.category) || null;
+  });
 
-    // Emite el evento original para agregar al carrito
+  // Signal computada para calcular el precio con descuento (solo para descuentos %)
+  discountedPrice = computed(() => {
+    const promo = this.applicablePromo();
+
+    // Solo calcula precio si es descuento porcentual
+    if (promo && promo.discount && promo.promoType !== '2x1') {
+      const discountAmount = this.product.price * (promo.discount / 100);
+      return parseFloat((this.product.price - discountAmount).toFixed(2));
+    }
+    return null;
+  });
+
+  // NUEVO: Signal para verificar si es 2x1
+  is2x1 = computed(() => {
+    const promo = this.applicablePromo();
+    return promo?.promoType === '2x1';
+  });
+
+  onAddClick(event: MouseEvent) {
+    event.stopPropagation();
     this.add.emit(this.product);
 
-    // Si la animación ya está en curso, no la reinicies
     if (this.showPlusOne()) {
       return;
     }
-
-    // Inicia la animación (muestra el <span> '+1')
     this.showPlusOne.set(true);
-
-    // Termina la animación (oculta el <span>) después de 1 segundo
     setTimeout(() => {
       this.showPlusOne.set(false);
-    }, 1000); // 1000ms = 1 segundo (debe coincidir con la duración de la animación)
+    }, 1000);
   }
 }

@@ -1,6 +1,11 @@
 <div class="row g-3 align-items-center mb-3">
   <div class="col-md-5">
-    <input class="form-control" [(ngModel)]="query" placeholder="Buscar productos...">
+    <!-- El ngModel aquí debe ser 'query' (Signal), no '[(ngModel)]' -->
+    <!-- Asumiendo que usas el estilo de Signals (como en el login simulado): -->
+    <input class="form-control"
+           placeholder="Buscar productos..."
+           [value]="query()"
+           (input)="query.set($event.target.value)">
   </div>
   <div class="col-md-7 d-flex flex-wrap gap-2">
     <button class="btn btn-outline-secondary btn-sm" [class.active]="!selectedCategory()" (click)="selectCat()">
@@ -19,20 +24,13 @@
   <div class="row row-cols-2 row-cols-md-6 g-3">
     @for (v of vacias; track v)  {
       <div class="col">
+        <!-- ... (tu HTML de 'loading placeholder' va aquí) ... -->
         <div class="card h-100">
-          <img src="load.gif" class="card-img-top p-4" alt="Cargando...">
-          <div class="card-body">
-            <h6 class="card-title placeholder-glow">
-              <span class="placeholder col-8"></span>
-            </h6>
-            <p class="card-text placeholder-glow">
-              <span class="placeholder col-6"></span>
-            </p>
-            <div class="d-grid">
-              <span class="btn btn-outline-secondary disabled placeholder col-6 mx-auto"></span>
-            </div>
-          </div>
-        </div>
+           <div class="card-body placeholder-glow">
+             <span class="placeholder col-8"></span>
+             <span class="placeholder col-6"></span>
+           </div>
+         </div>
       </div>
     }
   </div>
@@ -40,7 +38,15 @@
   <div class="tarj row row-cols-2 row-cols-md-6 g-3">
   @for (p of filtered(); track p.id) {
     <div class="col">
-      <app-product-card [product]="p" (add)="addToCart($event)"></app-product-card>
+      <!--
+        AQUÍ ESTÁ LA ACTUALIZACIÓN CRÍTICA:
+        Debemos pasar [promos]="promos()" a la tarjeta.
+      -->
+      <app-product-card
+        [product]="p"
+        [promos]="promos()"
+        (add)="addToCart($event)">
+      </app-product-card>
     </div>
   }
 </div>

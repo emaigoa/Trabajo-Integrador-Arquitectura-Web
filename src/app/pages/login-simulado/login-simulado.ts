@@ -1,62 +1,75 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+// No se necesita FormsModule
 
 @Component({
   selector: 'app-login-simulacion',
   standalone: true,
-  imports: [CommonModule, FormsModule], // <-- 'RouterLink' fue eliminado (Warning NG8113)
-  templateUrl: './login-simulado.html',
+  imports: [CommonModule],
+  templateUrl: './login-simulado.html', // <--- Enlaza al HTML
+  styleUrls: ['./login-simulado.css']   // <--- NUEVO: Enlaza al CSS
 })
 export class LoginSimulacionComponent {
-  // Solución al error TS2339: expone el objeto JSON a la plantilla como _JSON
-  protected _JSON = JSON;
 
-  // Estado del formulario (usado para binding bidireccional)
-  user = {
-    username: '',
-    email: ''
-  };
+  // 1. Signals individuales para cada campo
+  username = signal('');
+  email = signal('');
 
-  // Signals que manejan la salida para cumplir la consigna
+  // 2. Signals que manejan la salida
   mensaje = signal('');
   dataEnviada = signal<any>(null);
-
-  // NUEVO: Signal para el mensaje de error de validación
   errorMensaje = signal('');
 
+  // 3. Funciones para manejar el evento (input) de cada campo
+  onUsernameChange(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.username.set(value);
+  }
+
+  onEmailChange(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.email.set(value);
+  }
+
+  // 4. Función privada para limpiar los campos
+  private resetFields() {
+    this.username.set('');
+    this.email.set('');
+  }
+
   /**
-   * Procesa la simulación de login.
-   * La lógica debe: 1) Validar, 2) Imprimir en consola, 3) Mostrar mensaje en pantalla, 4) Limpiar campos.
+   * 5. Lógica de Submit (lee desde las Signals)
    */
   submitLogin() {
+    const currentUsername = this.username();
+    const currentEmail = this.email();
 
-    //  Lógica de Validación
-    if (!this.user.username || !this.user.email) {
-      this.errorMensaje.set('Por favor, complete ambos campos (Nombre de Usuario y Email).');
-      this.mensaje.set(''); // Limpiamos el mensaje de éxito si existía
-      this.dataEnviada.set(null);
-      return; // Detenemos la ejecución
-    }
-
-    //  VALIDACIÓN DE EMAIL (Debe incluir "@")
-    if (!this.user.email.includes('@') || this.user.email.length < 3) {
-      this.errorMensaje.set('El formato del email no es válido. Debe incluir "@" y ser correcto.');
-      return; // Detenemos la ejecución
-    }
-
-    // Si la validación pasa, limpiamos el error
+    // Limpiamos mensajes anteriores
     this.errorMensaje.set('');
+    this.mensaje.set('');
+    this.dataEnviada.set(null);
 
-    // 2. Impresión en consola (Requisito)
+    // Validación de campos vacíos
+    if (!currentUsername || !currentEmail) {
+      this.errorMensaje.set('Por favor, complete ambos campos (Nombre de Usuario y Email).');
+      return;
+    }
+
+    // Validación de Email
+    if (!currentEmail.includes('@') || currentEmail.length < 3) {
+      this.errorMensaje.set('El formato del email no es válido. Debe incluir "@" y ser correcto.');
+      return;
+    }
+
+    // Impresión en consola
     console.log('--- SIMULACIÓN DE LOGIN EXITOSO ---');
-    console.log('Datos del formulario:', this.user);
+    console.log('Datos del formulario:', { username: currentUsername, email: currentEmail });
 
-    // 3. Actualizar Signals de éxito
-    this.dataEnviada.set({ ...this.user });
-    this.mensaje.set(`Hola ${this.user.email}! Login exitoso.`);
+    // Actualizar Signals de éxito
+    this.dataEnviada.set({ username: currentUsername, email: currentEmail });
+    this.mensaje.set(`Hola ${currentEmail}! Login exitoso.`);
 
-    // 4. Limpiar los campos (Requisito)
-    this.user = { username: '', email: '' };
+    // Limpiar los campos
+    this.resetFields();
   }
 }
