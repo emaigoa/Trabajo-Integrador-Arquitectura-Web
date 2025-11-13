@@ -22,7 +22,17 @@
         </span>
         <button class="btn btn-outline-secondary btn-sm" (click)="logout()">Salir</button>
       } @else {
-        <button class="btn btn-primary btn-sm" (click)="login()">Iniciar sesión</button>
+        @if (displayName) {
+          <span class="navbar-text">
+            Hola, <strong>{{ displayName }}</strong>
+          </span>
+          <button class="btn btn-outline-secondary btn-sm" (click)="logout()">Salir</button>
+
+        }
+        @else {
+          <button class="btn btn-primary btn-sm" (click)="login()">Iniciar sesión</button>
+        }
+
       }
     </div>
   </div>
