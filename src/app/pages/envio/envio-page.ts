@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+
 @Component({
   selector: 'app-envio',
   standalone: true,
@@ -10,7 +11,8 @@ import { FormsModule } from '@angular/forms';
   //styleUrl: './envio-page.css'
 })
 export class EnvioPage {
-   address = '';
+
+  address = '';
   // acá luego integramos ShippingService (OpenRouteService) para calcular envío
   submitted = signal(false);
 

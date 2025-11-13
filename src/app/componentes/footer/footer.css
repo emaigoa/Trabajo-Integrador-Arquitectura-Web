@@ -1,0 +1,7 @@
+.footer {
+  background: #f8f9fa;
+}
+
+.footer a:hover {
+  opacity: 0.7;
+}

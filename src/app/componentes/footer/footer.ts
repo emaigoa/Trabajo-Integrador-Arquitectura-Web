@@ -3,10 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-footer',
   standalone: true,
-  template: `
-    <footer class="text-center text-muted py-4 border-top mt-5">
-      <small> Minimarket</small>
-    </footer>
-  `
+  templateUrl: './footer.html',
+  styleUrls: ['./footer.css']
 })
 export class FooterComponent {}

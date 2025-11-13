@@ -124,6 +124,19 @@
         </div>
       }
     </div>
+    @if (authState.isLoggedIn()) {
     <a class="btn btn-primary" routerLink="/envio">Iniciar compra</a>
+    } @else {
+    <div class="hover-wrapper">
+    <a class="btn btn-secondary disabled-btn">
+      Iniciar compra
+    </a>
+
+    <!-- Cartel flotante -->
+    <div class="hover-card">
+      Debes iniciar sesión para continuar
+    </div>
+  </div>
+    }
   </div>
 }
