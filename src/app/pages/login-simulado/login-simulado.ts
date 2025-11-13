@@ -1,75 +1,64 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// No se necesita FormsModule
+import { SimLoginService } from '../../servicios/autenticacionsim';
 
 @Component({
   selector: 'app-login-simulacion',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './login-simulado.html', // <--- Enlaza al HTML
-  styleUrls: ['./login-simulado.css']   // <--- NUEVO: Enlaza al CSS
+  templateUrl: './login-simulado.html',
+  styleUrls: ['./login-simulado.css']
 })
 export class LoginSimulacionComponent {
 
-  // 1. Signals individuales para cada campo
   username = signal('');
   email = signal('');
 
-  // 2. Signals que manejan la salida
   mensaje = signal('');
   dataEnviada = signal<any>(null);
   errorMensaje = signal('');
 
-  // 3. Funciones para manejar el evento (input) de cada campo
-  onUsernameChange(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
-    this.username.set(value);
+  private simAuth = inject(SimLoginService);
+
+  onUsernameChange(e: Event) {
+    this.username.set((e.target as HTMLInputElement).value);
   }
 
-  onEmailChange(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
-    this.email.set(value);
+  onEmailChange(e: Event) {
+    this.email.set((e.target as HTMLInputElement).value);
   }
 
-  // 4. Función privada para limpiar los campos
-  private resetFields() {
+  private reset() {
     this.username.set('');
     this.email.set('');
   }
 
-  /**
-   * 5. Lógica de Submit (lee desde las Signals)
-   */
   submitLogin() {
-    const currentUsername = this.username();
-    const currentEmail = this.email();
+    const user = this.username().trim();
+    const mail = this.email().trim();
 
-    // Limpiamos mensajes anteriores
     this.errorMensaje.set('');
     this.mensaje.set('');
     this.dataEnviada.set(null);
 
-    // Validación de campos vacíos
-    if (!currentUsername || !currentEmail) {
-      this.errorMensaje.set('Por favor, complete ambos campos (Nombre de Usuario y Email).');
+    if (!user || !mail) {
+      this.errorMensaje.set('Debe completar ambos campos.');
       return;
     }
 
-    // Validación de Email
-    if (!currentEmail.includes('@') || currentEmail.length < 3) {
-      this.errorMensaje.set('El formato del email no es válido. Debe incluir "@" y ser correcto.');
+    if (!mail.includes('@')) {
+      this.errorMensaje.set('Email no válido.');
       return;
     }
 
-    // Impresión en consola
-    console.log('--- SIMULACIÓN DE LOGIN EXITOSO ---');
-    console.log('Datos del formulario:', { username: currentUsername, email: currentEmail });
+    console.log('--- SIMULACIÓN DE LOGIN EXITOSO ---', { username: user, email: mail });
 
-    // Actualizar Signals de éxito
-    this.dataEnviada.set({ username: currentUsername, email: currentEmail });
-    this.mensaje.set(`Hola ${currentEmail}! Login exitoso.`);
+    this.mensaje.set(`Hola ${mail}! Login exitoso.`);
+    this.dataEnviada.set({ username: user, email: mail });
 
-    // Limpiar los campos
-    this.resetFields();
+    // 🔥 Guardar usuario simulado en el servicio nuevo
+    this.simAuth.login(user, mail);
+
+    this.reset();
   }
 }

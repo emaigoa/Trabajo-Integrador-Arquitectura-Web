@@ -1,29 +1,39 @@
-// src/app/componentes/encabezado/encabezado.ts
+// encabezado.ts
 import { Component, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CartService } from '../../servicios/carrito';
-import { AuthService } from '../../servicios/autenticacion';
+import { AuthStateService } from '../../servicios/estado-auten';
+import { AuthService } from '../../servicios/autenticacion';   // ⬅️ WSO2
 
 @Component({
   selector: 'encabezado',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterLink],
   templateUrl: './encabezado.html',
-  styleUrl: './encabezado.css'
+  styleUrls: ['./encabezado.css']
 })
 export class EncabezadoComponent {
-  cart = inject(CartService);
-  auth = inject(AuthService);
 
-  get loggedIn() {
-    return this.auth.isLoggedIn();
+  cart = inject(CartService);
+  authState = inject(AuthStateService);
+  authWso2 = inject(AuthService);   // ⬅️ servicio real de WSO2
+
+  get isLoggedIn() {
+    return this.authState.isLoggedIn();
   }
 
   get displayName() {
-    return this.auth.displayName; // viene del AuthService (claims.name / email / etc.)
+    return this.authState.displayName();
   }
 
-  login()    { this.auth.login(); }
-  logout()   { this.auth.logout(); }
+  // 👉 este lo usa el botón “Iniciar sesión”
+  login() {
+    this.authWso2.login();
+  }
+
+  // 👉 este lo usa el botón “Cerrar sesión”
+  logout() {
+    this.authState.logout();
+  }
 }

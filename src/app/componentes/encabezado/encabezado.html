@@ -1,39 +1,47 @@
 <nav class="navbar navbar-expand-lg bg-light border-bottom sticky-top">
   <div class="container">
-    <a class="navbar-brand fw-bold" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-      <img src="./icon.png" alt="logo" width="24" height="24"> MiniMarket
+
+    <a class="navbar-brand fw-bold" routerLink="/">
+      <img src="./icon.png" width="24" height="24" alt="logo">
+      MiniMarket
     </a>
 
     <div class="ms-auto d-flex gap-3 align-items-center">
-      <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
 
-      <a class="nav-link position-relative" routerLink="/carrito" routerLinkActive="active">
+      <!-- Carrito -->
+      <a class="nav-link position-relative" routerLink="/carrito">
         🛒 Carrito
         @if (cart.count() > 0) {
           <span class="badge text-bg-primary ms-1">{{ cart.count() }}</span>
         }
       </a>
 
-      <!-- Zona de usuario -->
-      <a class="btn btn-outline-info btn-sm" routerLink="/login-simulado">Simular Login</a>
-      @if (loggedIn) {
-        <span class="navbar-text">
-          Hola, <strong>{{ displayName || 'usuario' }}</strong>
-        </span>
-        <button class="btn btn-outline-secondary btn-sm" (click)="logout()">Salir</button>
-      } @else {
-        @if (displayName) {
-          <span class="navbar-text">
-            Hola, <strong>{{ displayName }}</strong>
-          </span>
-          <button class="btn btn-outline-secondary btn-sm" (click)="logout()">Salir</button>
+      <!-- SI NO ESTÁ LOGUEADO (ningún método) -->
+@if (!isLoggedIn) {
 
-        }
-        @else {
-          <button class="btn btn-primary btn-sm" (click)="login()">Iniciar sesión</button>
-        }
+  <a class="btn btn-outline-info btn-sm"
+     routerLink="/login-simulado">
+    Simular Login
+  </a>
 
-      }
+  <button class="btn btn-primary btn-sm"
+          (click)="login()">
+    Iniciar sesión
+  </button>
+}
+
+<!-- SI ESTÁ LOGUEADO (simulado o WSO2) -->
+@if (isLoggedIn) {
+  <span class="navbar-text">
+    Hola, <strong>{{ displayName }}</strong>
+  </span>
+
+  <button class="btn btn-outline-secondary btn-sm"
+          (click)="logout()">
+    Cerrar sesión
+  </button>
+}
+
     </div>
   </div>
 </nav>
