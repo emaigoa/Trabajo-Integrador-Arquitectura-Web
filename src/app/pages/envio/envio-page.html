@@ -1,12 +1,161 @@
-<h3>Checkout</h3>
+<h3 class="mb-3">Checkout - Envío</h3>
 
-<div class="mb-3">
-  <label class="form-label">Dirección de entrega</label>
-  <input class="form-control" [(ngModel)]="address" placeholder="Ej: Av. Colón 1234, Mar del Plata">
+<!-- PASO 1: Dirección + autocomplete -->
+@if (step() === 'direccion') {
+  <div class="card mb-3">
+    <div class="card-body">
+      <h5 class="card-title">Dirección de entrega</h5>
+
+<!-- 🔵 NUEVO: selector de país -->
+<div class="mb-2">
+  <label class="form-label">País</label>
+  <select class="form-select"
+          [(ngModel)]="country">
+    @for (c of countries; track c.code) {
+      <option [value]="c.code">{{ c.name }}</option>
+    }
+  </select>
+  <small class="text-muted">
+    Usamos el país para mejorar el autocompletado de la dirección.
+  </small>
 </div>
 
-<button class="btn btn-success" (click)="submit()" [disabled]="!address">Confirmar pedido</button>
+<div class="mb-2 position-relative">
+  <label class="form-label">Ingresá tu dirección</label>
+  <input class="form-control"
+         [ngModel]="address"
+         (ngModelChange)="onAddressInput($event)"
+         placeholder="Ej: Av. Colón 1234, Mar del Plata">
 
-@if (submitted()) {
-  <div class="alert alert-success mt-3">Pedido registrado (demo). Próximo paso: cálculo de envío automático.</div>
+
+        <!-- SUGERENCIAS -->
+        @if (addressSuggestions().length > 0) {
+          <ul class="list-group position-absolute w-100 mt-1" style="z-index: 10;">
+            @for (option of addressSuggestions(); track option) {
+              <li class="list-group-item list-group-item-action"
+                  (click)="chooseSuggestion(option)">
+                {{ option }}
+              </li>
+            }
+          </ul>
+        }
+      </div>
+
+      @if (loadingSuggestions()) {
+        <div class="text-muted small">
+          Buscando direcciones…
+        </div>
+      }
+
+      @if (quoteError()) {
+        <div class="alert alert-danger mt-2">
+          {{ quoteError() }}
+        </div>
+      }
+
+      <button class="btn btn-success mt-2"
+              (click)="confirmarDireccion()"
+              [disabled]="!address || loadingQuote()">
+        @if (loadingQuote()) {
+          Calculando envío...
+        } @else {
+          Confirmar dirección
+        }
+      </button>
+    </div>
+  </div>
+}
+
+<!-- PASO 2: Resumen de carrito + envío -->
+@if (step() === 'resumen' && quote()) {
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <h5 class="card-title">Resumen de compra</h5>
+
+      <p class="mb-1">
+        <strong>Dirección:</strong> {{ confirmedAddress()?.formatted || address }}
+      </p>
+
+      <!-- Productos del carrito -->
+      @if (cart.items().length === 0) {
+        <div class="alert alert-info mt-2">
+          Tu carrito está vacío. <a routerLink="/">Ir al catálogo</a>
+        </div>
+      } @else {
+        <ul class="list-group mb-3 mt-2">
+          @for (p of cart.items(); track p.product.id) {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>{{ p.product.name }}</span>
+              <span>$ {{ p.product.price| number:'1.2-2' }}</span>
+            </li>
+          }
+        </ul>
+
+        <div class="mb-1">
+          <strong>Subtotal productos:</strong>
+          $ {{ cart.total() | number:'1.2-2' }}
+        </div>
+
+        <div class="mb-1">
+          <strong>Costo de envío:</strong>
+          $ {{ quote()?.price | number:'1.2-2' }}
+          <span class="text-muted small">
+            ({{ quote()?.distanceKm }} km, aprox. {{ quote()?.etaHours }} hs)
+          </span>
+        </div>
+
+        <div class="mb-2">
+          <strong>Total a pagar:</strong>
+          $ {{ totalConEnvio | number:'1.2-2' }}
+        </div>
+
+        <div class="text-muted small mb-2">
+          Operador logístico: {{ quote()?.carrier }}
+        </div>
+
+        <button class="btn btn-primary"
+                (click)="confirmarEnvio()">
+          Confirmar envío
+        </button>
+      }
+    </div>
+  </div>
+}
+
+<!-- PASO 3: Envío confirmado -->
+@if (step() === 'confirmado' && quote()) {
+  <div class="alert alert-success mt-3">
+    <h5 class="alert-heading">¡Envío confirmado!</h5>
+
+    <p class="mb-1">
+      Hemos registrado tu envío a:
+      <strong>{{ confirmedAddress()?.formatted || address }}</strong>
+    </p>
+
+    <p class="mb-1">
+      <strong>Cantidad de productos:</strong> {{ cart.items().length }}
+    </p>
+
+    <p class="mb-1">
+      <strong>Subtotal productos:</strong>
+      $ {{ cart.total() | number:'1.2-2' }}<br>
+      <strong>Envío:</strong>
+      $ {{ quote()?.price | number:'1.2-2' }}<br>
+      <strong>Total:</strong>
+      $ {{ totalConEnvio | number:'1.2-2' }}
+    </p>
+
+    <p class="mb-1">
+      <strong>Distancia estimada:</strong> {{ quote()?.distanceKm }} km<br>
+      <strong>Tiempo estimado de entrega:</strong> {{ quote()?.etaHours }} horas<br>
+      <strong>Operador:</strong> {{ quote()?.carrier }}
+    </p>
+
+    @if (confirmedAt()) {
+      <p class="mb-0 text-muted small">
+        Fecha y hora de confirmación: {{ confirmedAt() | date:'short' }}
+      </p>
+    }
+  </div>
 }

@@ -17,5 +17,11 @@ export const environment = {
   wso2RegisterUrl: "https://localhost:9443/myaccount/register",
 
   // Útil si querés armar URLs absolutas en algún punto del cliente
-  appBaseUrl: "http://localhost:4200"
+  appBaseUrl: "http://localhost:4200",
+
+
+  // 🔑 APIs externas
+  geoapifyKey: '5a638551f02a436ab9c89ec428babe70',
+  orsKey: 'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImM0NWM5NjEwYmQ0YTRlOTBiZmFjMjBjNDc0MTI0YWZmIiwiaCI6Im11cm11cjY0In0=',
+  postcoderKey: 'PCWVS-RSSMT-QCQ6G-3AA8V'
 };
