@@ -7,39 +7,29 @@
 }
 
 .card-hover-effect {
-  /* ... (estilos de hover existentes) ... */
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   cursor: pointer;
 }
 
 .card-hover-effect:hover {
-  /* ... (estilos de hover existentes) ... */
   transform: scale(1.10);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.15);
   z-index: 10;
 }
 
-/* 5. ESTILOS PARA LA NUEVA ANIMACIÓN "+1" */
 
 .button-container {
-  /* Contenedor relativo para posicionar el "+1" */
   position: relative;
 }
 
 .plus-one-animation {
   position: absolute;
-  /* Posiciona el "+1" cerca del botón de agregar */
   right: 15px;
   top: -10px;
 
   font-size: 1.5rem;
   font-weight: bold;
   color: #198754;
-  /* Color verde (Bootstrap 'success') */
-
-  /* Evita que el <span> bloquee clics */
   pointer-events: none;
-
-  /* Asigna la animación 'fade-and-rise' */
   animation: fade-and-rise 1s ease-out forwards;
 }

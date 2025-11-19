@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CartService } from '../../servicios/carrito';
 import { AuthStateService } from '../../servicios/estado-auten';
-import { AuthService } from '../../servicios/autenticacion';   // ⬅️ WSO2
+import { AuthService } from '../../servicios/autenticacion';   //
 
 @Component({
   selector: 'encabezado',
@@ -17,7 +17,7 @@ export class EncabezadoComponent {
 
   cart = inject(CartService);
   authState = inject(AuthStateService);
-  authWso2 = inject(AuthService);   // ⬅️ servicio real de WSO2
+  authWso2 = inject(AuthService);   //
 
   get isLoggedIn() {
     return this.authState.isLoggedIn();
@@ -27,12 +27,12 @@ export class EncabezadoComponent {
     return this.authState.displayName();
   }
 
-  // 👉 este lo usa el botón “Iniciar sesión”
+
   login() {
     this.authWso2.login();
   }
 
-  // 👉 este lo usa el botón “Cerrar sesión”
+
   logout() {
     this.authState.logout();
   }

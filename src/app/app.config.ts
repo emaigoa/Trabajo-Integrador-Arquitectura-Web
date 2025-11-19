@@ -27,10 +27,10 @@ import {
 // Servicio propio para cargar el perfil y exponer displayName
 import { AuthService } from './servicios/autenticacion';
 
-// Detectar si estamos en browser SIN usar inject()
+// detectar si estamos en browser
 const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
 const base = environment.oidcIssuer.replace(/\/$/, ''); // sin barra final
-/** ⚙️ Config OIDC (endpoints manuales de WSO2) */
+/**  config OIDC (endpoints manuales de WSO2) */
 const authConfig: AuthConfig = {
    loginUrl:        `${base}/authorize`,
   tokenEndpoint:   `${base}/token`,
@@ -38,7 +38,6 @@ const authConfig: AuthConfig = {
   revocationEndpoint: `${base}/revoke`,
   logoutUrl:       `${base.replace(/\/oauth2$/, '')}/oidc/logout`, // ruta OIDC
 
-  // ✅ ABSOLUTO, sin window (no depende de SSR)
   redirectUri: `${environment.appBaseUrl}/callback`,
 
   clientId: environment.oidcClientId ?? 'o2B5f_ZslC19ctDZvL9tYxKUUNoa',
@@ -49,7 +48,6 @@ const authConfig: AuthConfig = {
   requireHttps: true,
 };
 
-/** Storage “inofensivo” para SSR (evita tocar localStorage en el server) */
 function storageFactory(pid: Object): OAuthStorage {
   if (!isPlatformBrowser(pid)) {
     return {
@@ -61,11 +59,10 @@ function storageFactory(pid: Object): OAuthStorage {
   return localStorage;
 }
 
-/** Configura OAuth y hace tryLogin SOLO en browser (evita window is not defined) */
 function oauthInitFactory(oauth: OAuthService, pid: Object, auth: AuthService) {
   return async () => {
     oauth.configure(authConfig);
-    if (!isPlatformBrowser(pid)) return;   // ❗ clave
+    if (!isPlatformBrowser(pid)) return;
     await oauth.tryLoginCodeFlow();
     if (oauth.hasValidAccessToken()) {
       await auth.afterLoginLoadProfile();
@@ -76,21 +73,15 @@ function oauthInitFactory(oauth: OAuthService, pid: Object, auth: AuthService) {
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    // ✅ HttpClient con fetch para SSR (resuelve NG02801)
     provideHttpClient(withFetch()),
-
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
-
-    // ✅ OAuth base (sin discovery aquí; configuramos en el APP_INITIALIZER)
     provideOAuthClient(),
 
-    // Storage compatible con SSR
     { provide: OAuthStorage, useFactory: storageFactory, deps: [PLATFORM_ID] },
 
-    // Inicialización de OAuth solo en browser
     {
       provide: APP_INITIALIZER,
       useFactory: oauthInitFactory,
@@ -98,7 +89,6 @@ export const appConfig: ApplicationConfig = {
       multi: true,
     },
 
-    // Firebase solo en navegador
     ...(isBrowser
       ? [
           provideFirebaseApp(() => initializeApp(environment.firebase)),

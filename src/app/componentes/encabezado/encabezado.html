@@ -16,7 +16,6 @@
         }
       </a>
 
-      <!-- SI NO ESTÁ LOGUEADO (ningún método) -->
 @if (!displayName) {
 
   <a class="btn btn-outline-info btn-sm"
@@ -30,7 +29,6 @@
   </button>
 }
 
-<!-- SI ESTÁ LOGUEADO (simulado o WSO2) -->
 @if (isLoggedIn) {
   <span class="navbar-text">
     Hola, <strong>{{ displayName }}</strong>

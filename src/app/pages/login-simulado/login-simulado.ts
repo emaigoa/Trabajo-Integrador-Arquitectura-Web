@@ -56,7 +56,6 @@ export class LoginSimulacionComponent {
     this.mensaje.set(`Hola ${mail}! Login exitoso.`);
     this.dataEnviada.set({ username: user, email: mail });
 
-    // 🔥 Guardar usuario simulado en el servicio nuevo
     this.simAuth.login(user, mail);
 
     this.reset();

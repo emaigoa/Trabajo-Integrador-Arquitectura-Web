@@ -2,10 +2,9 @@
   <h3 class="mb-4 text-center text-primary">Simulacion de Login</h3>
 
   <div class="card p-4 shadow-lg border-0">
-    <!-- Usamos (submit) normal y prevenimos el refresh -->
     <form (submit)="submitLogin(); $event.preventDefault()" class="d-grid gap-3">
 
-      <!-- Campo Nombre de Usuario (binding con señal username) -->
+      <!-- Campo Nombre de Usuario (con señal username) -->
       <div class="form-floating">
         <input type="text"
                id="username"
@@ -17,7 +16,7 @@
         <label for="username">Nombre de Usuario</label>
       </div>
 
-      <!-- Campo Email (binding con señal email) -->
+      <!-- Campo Email (con señal email) -->
       <div class="form-floating">
         <input type="email"
                id="email"
@@ -29,21 +28,21 @@
         <label for="email">Email de Usuario</label>
       </div>
 
-      <!-- Zona de Error de Validación -->
+      <!-- zona de error de validacion -->
       @if (errorMensaje()) {
         <div class="alert alert-danger py-2 px-3 small" role="alert">
           {{ errorMensaje() }}
         </div>
       }
 
-      <!-- Botón de Envío -->
+      <!-- boton de Envío -->
       <button type="submit" class="btn btn-warning btn-lg fw-bold mt-2">
         Enviar
       </button>
     </form>
   </div>
 
-  <!-- Zona de Resultados -->
+  <!-- zona de resultados -->
   @if (mensaje()) {
     <div class="card shadow border-success mt-4 animate__animated animate__fadeInUp">
       <div class="card-body text-center p-4">

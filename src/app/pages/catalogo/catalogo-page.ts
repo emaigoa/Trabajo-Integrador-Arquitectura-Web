@@ -57,10 +57,8 @@ export class CatalogoPage implements OnInit {
       return;
     }
 
-    // Manejo de promoción 2x1
+    // manejo de promocion 2x1
     if (promo.promoType === '2x1') {
-      // Para 2x1, simplemente marcamos el producto con la info de la promo
-      // La lógica de aplicar el descuento se hará en el carrito cuando haya 2+ unidades
       const productWith2x1 = {
         ...p,
         promoInfo: promo.title,
@@ -70,7 +68,7 @@ export class CatalogoPage implements OnInit {
       return;
     }
 
-    // Manejo de descuento porcentual
+    // manejo de descuento porcentual
     if (promo.discount) {
       const discountAmount = p.price * (promo.discount / 100);
       const newPrice = parseFloat((p.price - discountAmount).toFixed(2));
@@ -86,7 +84,7 @@ export class CatalogoPage implements OnInit {
       return;
     }
 
-    // Sin descuento aplicable
+    // sin descuento aplicable
     this.cart.add(p);
   }
 }

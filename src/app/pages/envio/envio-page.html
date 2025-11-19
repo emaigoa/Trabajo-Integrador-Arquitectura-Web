@@ -1,12 +1,10 @@
 <h3 class="mb-3">Checkout - Envío</h3>
 
-<!-- PASO 1: Dirección + autocomplete -->
 @if (step() === 'direccion') {
   <div class="card mb-3">
     <div class="card-body">
       <h5 class="card-title">Dirección de entrega</h5>
 
-<!-- 🔵 NUEVO: selector de país -->
 <div class="mb-2">
   <label class="form-label">País</label>
   <select class="form-select"
@@ -15,9 +13,6 @@
       <option [value]="c.code">{{ c.name }}</option>
     }
   </select>
-  <small class="text-muted">
-    Usamos el país para mejorar el autocompletado de la dirección.
-  </small>
 </div>
 
 <div class="mb-2 position-relative">
@@ -66,7 +61,7 @@
   </div>
 }
 
-<!-- PASO 2: Resumen de carrito + envío -->
+<!--  Resumen de carrito + envío -->
 @if (step() === 'resumen' && quote()) {
 
   <div class="card mb-3">
@@ -107,7 +102,7 @@
 
         <div class="mb-2">
           <strong>Total a pagar:</strong>
-          $ {{ totalConEnvio | number:'1.2-2' }}
+          $ {{ totalConEnvio() | number:'1.2-2' }}
         </div>
 
         <div class="text-muted small mb-2">
@@ -123,7 +118,7 @@
   </div>
 }
 
-<!-- PASO 3: Envío confirmado -->
+<!-- Envío confirmado -->
 @if (step() === 'confirmado' && quote()) {
   <div class="alert alert-success mt-3">
     <h5 class="alert-heading">¡Envío confirmado!</h5>
@@ -134,16 +129,16 @@
     </p>
 
     <p class="mb-1">
-      <strong>Cantidad de productos:</strong> {{ cart.items().length }}
+      <strong>Cantidad de productos:</strong> {{ confirmedCartCount() }}
     </p>
 
     <p class="mb-1">
       <strong>Subtotal productos:</strong>
-      $ {{ cart.total() | number:'1.2-2' }}<br>
+      $ {{ confirmedCartTotal() | number:'1.2-2' }}<br>
       <strong>Envío:</strong>
       $ {{ quote()?.price | number:'1.2-2' }}<br>
       <strong>Total:</strong>
-      $ {{ totalConEnvio | number:'1.2-2' }}
+      $ {{ totalConEnvio() | number:'1.2-2' }}
     </p>
 
     <p class="mb-1">

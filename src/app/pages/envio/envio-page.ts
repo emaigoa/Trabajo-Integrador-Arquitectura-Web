@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AddressService, AddressCoords } from '../../servicios/direcciones';
@@ -16,10 +16,10 @@ export class EnvioPage {
   // Dirección que escribe/ve el usuario
   address = '';
 
-  // 🔵 NUEVO: país seleccionado (ISO 2 letras)
+  // país seleccionado
   country = 'AR';
 
-  // 🔵 NUEVO: lista de países para el combo
+  // lista de países para el combo
   countries = [
     { code: 'AR', name: 'Argentina' },
     { code: 'BR', name: 'Brasil' },
@@ -47,6 +47,8 @@ export class EnvioPage {
   private addressService = inject(AddressService);
   private shippingService = inject(ShippingService);
   protected cart = inject(CartService);
+  protected confirmedCartTotal = signal(0);
+  protected confirmedCartCount = signal(0);
 
   // Input de dirección con autocomplete
   onAddressInput(term: string) {
@@ -60,7 +62,7 @@ export class EnvioPage {
 
     this.loadingSuggestions.set(true);
 
-    // 👇 ahora le pasamos también el país a Postcoder
+    // le pasamos también el país a Postcoder
     this.addressService.search(term, this.country).subscribe({
       next: suggestions => {
         this.addressSuggestions.set(suggestions);
@@ -80,7 +82,6 @@ export class EnvioPage {
     this.addressSuggestions.set([]);
   }
 
-  // Botón "Confirmar dirección"
   confirmarDireccion() {
     if (!this.address) return;
 
@@ -88,12 +89,12 @@ export class EnvioPage {
     this.quoteError.set(null);
     this.quote.set(null);
 
-    // 1) Obtener coordenadas de la dirección (Geoapify por ahora)
+    // Obtener coordenadas de la dirección (Geoapify por ahora)
     this.addressService.getCoords(this.address).subscribe({
       next: coords => {
         this.confirmedAddress.set(coords);
 
-        // 2) Llamar a la API de envíos con coords + subtotal
+        // Llamar a la API de envíos con coords + subtotal
         const subtotal = this.cart.total();
 
         this.shippingService.getQuote(coords, subtotal).subscribe({
@@ -117,15 +118,20 @@ export class EnvioPage {
     });
   }
 
-  // Botón "Confirmar envío"
   confirmarEnvio() {
+    this.confirmedCartTotal.set(this.cart.total());
+    this.confirmedCartCount.set(this.cart.count());
+
     this.confirmedAt.set(new Date());
     this.step.set('confirmado');
-    this.cart.clear();
+    this.cart.clear(); // limpiamos después de guardar la info
   }
-
-  get totalConEnvio(): number {
+  totalConEnvio = computed<number>(() => {
     const q = this.quote();
-    return (this.cart.total() ?? 0) + (q?.price ?? 0);
-  }
+    const subtotal = this.step() === 'confirmado'
+      ? this.confirmedCartTotal() // usar el subtotal guardado para el resumen final
+      : this.cart.total();        // usar el subtotal del carrito para el resumen de compra
+
+    return (subtotal ?? 0) + (q?.price ?? 0);
+  });
 }
