@@ -1,20 +1,24 @@
-// src/app/servicios/autenticacion.ts
-import { Injectable, Inject, PLATFORM_ID, signal } from '@angular/core';
+import { Injectable, Inject, inject, PLATFORM_ID, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { environment } from '../../environments/environment';
+import { CartService } from './carrito';
 
+
+// Servicio propio para cargar el perfil y exponer displayName
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private _displayName = signal<string>('');
-
+  private cart = inject(CartService);
+  // Inyectamos OAuthService y Router
   constructor(
     private oauth: OAuthService,
     private router: Router,
     @Inject(PLATFORM_ID) private pid: Object
   ) {}
 
+  // Cargar el perfil del usuario después del login
   async afterLoginLoadProfile() {
     if (!isPlatformBrowser(this.pid)) return;
     try {
@@ -38,10 +42,12 @@ export class AuthService {
     return this._displayName();
   }
 
+  // Verificar si el usuario está logueado
   isLoggedIn(): boolean {
     return isPlatformBrowser(this.pid) && !!this.oauth.hasValidAccessToken?.();
   }
 
+  // Iniciar el proceso de login
   login(): void {
     if (!isPlatformBrowser(this.pid)) return;
     const redirectUri = `${environment.appBaseUrl}/callback`;
@@ -53,37 +59,36 @@ export class AuthService {
     }
   }
 
-  /** Logout con OIDC RP-initiated y redirección inmediata al front. */
+
   logout(): void {
     if (!isPlatformBrowser(this.pid)) return;
 
-    // 1) URL de retorno (debe estar whitelisteada en WSO2)
+    //URL de retorno
     const postLogoutRedirectUri = `${environment.appBaseUrl}/cerrar`;
 
-    // 2) id_token actual para id_token_hint (recomendado por OIDC)
+    // id_token actual para id_token_hint
     const idToken = this.oauth.getIdToken?.() || '';
 
-    // 3) Construir endpoint de logout OIDC de WSO2
-    //    Si tu issuer/issuer base está en environment, usalo; si no, ponelo literal.
+    //Construir endpoint de logout OIDC de WSO2
     const issuerBase = environment.oidcIssuer?.replace(/\/oauth2\/?$/, '')?.replace(/\/$/, '') || 'https://localhost:9443';
-    // WSO2: /oidc/logout soporta id_token_hint + post_logout_redirect_uri
+
     const url =
       `${issuerBase}/oidc/logout` +
       `?post_logout_redirect_uri=${encodeURIComponent(postLogoutRedirectUri)}` +
       (idToken ? `&id_token_hint=${encodeURIComponent(idToken)}` : '') +
       `&state=logout`;
 
-    // 4) Limpieza local inmediata (no dependas de que el IdP vuelva)
+    // Limpieza local inmediata
     try { this.oauth.logOut(false as any); } catch {}
     try { this.oauth.revokeTokenAndLogout?.(); } catch {}
     try { this.oauth.logOut(); } catch {}
     this._displayName.set('');
+    this.cart.clear();
 
-    // 5) Redirección forzada al IdP (sin confirmación si deshabilitaste logout consent)
-    //    WSO2 devolverá a /signed-out y desde ahí navegás al home.
+    //Redirección forzada al IdP
     window.location.href = url;
 
-    // 6) Fallback por si algo falla con el IdP (a los 2s volvemos al home)
+    // Fallback por si algo falla con el IdP (a los 2s volvemos al home)
     setTimeout(() => this.router.navigateByUrl('/'), 2000);
   }
 }
