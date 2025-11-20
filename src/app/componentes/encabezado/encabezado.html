@@ -16,7 +16,7 @@
         }
       </a>
 <!--Botones login, si existe usuario, borrar por Hola... y boton cerrar-->
-@if (!displayName) {
+@if (isLoggedIn === false) {
 
   <a class="btn btn-outline-info btn-sm"
      routerLink="/login-simulado">
@@ -29,7 +29,7 @@
   </button>
 }
 
-@if (isLoggedIn) {
+@else {
   <span class="navbar-text">
     Hola, <strong>{{ displayName }}</strong>
   </span>
