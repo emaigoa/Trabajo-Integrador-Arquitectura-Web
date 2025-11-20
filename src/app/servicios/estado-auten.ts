@@ -1,6 +1,6 @@
 import { Injectable, inject, computed } from '@angular/core';
-import { AuthService } from './autenticacion';         // WSO2 real
-import { SimLoginService } from './autenticacionsim'; // Simulado
+import { AuthService } from './autenticacion';
+import { SimLoginService } from './autenticacionsim';
 
 @Injectable({ providedIn: 'root' })
 export class AuthStateService {
@@ -16,7 +16,7 @@ export class AuthStateService {
   loginWSO2() {
     this.wso2.login();
   }
-  // El nombre que muestra el encabezado
+  // El nombre que muestra el encabezado sea cual sea el método de login
   readonly displayName = computed(() => {
     if (this.sim.loggedIn()) return this.sim.displayName();
 

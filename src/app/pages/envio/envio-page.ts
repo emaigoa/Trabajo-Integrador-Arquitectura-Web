@@ -13,13 +13,12 @@ import { CartService } from '../../servicios/carrito';
 })
 export class EnvioPage {
 
-  // Dirección que escribe/ve el usuario
   address = '';
 
-  // país seleccionado
+  // País seleccionado por defecto
   country = 'AR';
 
-  // lista de países para el combo
+  // Lista de países
   countries = [
     { code: 'AR', name: 'Argentina' },
     { code: 'BR', name: 'Brasil' },
@@ -50,7 +49,7 @@ export class EnvioPage {
   protected confirmedCartTotal = signal(0);
   protected confirmedCartCount = signal(0);
 
-  // Input de dirección con autocomplete
+  // Input de dirección con autocomplete (API)
   onAddressInput(term: string) {
     this.address = term;
     this.quoteError.set(null);
@@ -62,7 +61,7 @@ export class EnvioPage {
 
     this.loadingSuggestions.set(true);
 
-    // le pasamos también el país a Postcoder
+    // Le pasamos también el país a Postcoder (API)
     this.addressService.search(term, this.country).subscribe({
       next: suggestions => {
         this.addressSuggestions.set(suggestions);
@@ -89,7 +88,7 @@ export class EnvioPage {
     this.quoteError.set(null);
     this.quote.set(null);
 
-    // Obtener coordenadas de la dirección (Geoapify por ahora)
+    // Obtener coordenadas de la dirección (Geoapify API)
     this.addressService.getCoords(this.address).subscribe({
       next: coords => {
         this.confirmedAddress.set(coords);
@@ -124,13 +123,13 @@ export class EnvioPage {
 
     this.confirmedAt.set(new Date());
     this.step.set('confirmado');
-    this.cart.clear(); // limpiamos después de guardar la info
+    this.cart.clear(); // Limpiamos después de guardar la info
   }
   totalConEnvio = computed<number>(() => {
     const q = this.quote();
     const subtotal = this.step() === 'confirmado'
-      ? this.confirmedCartTotal() // usar el subtotal guardado para el resumen final
-      : this.cart.total();        // usar el subtotal del carrito para el resumen de compra
+      ? this.confirmedCartTotal() // Usar el subtotal guardado para el resumen final
+      : this.cart.total();        // Usar el subtotal del carrito para el resumen de compra
 
     return (subtotal ?? 0) + (q?.price ?? 0);
   });

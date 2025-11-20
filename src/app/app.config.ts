@@ -27,19 +27,17 @@ import {
 // Servicio propio para cargar el perfil y exponer displayName
 import { AuthService } from './servicios/autenticacion';
 
-// detectar si estamos en browser
+// Detectar si estamos en browser
 const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
-const base = environment.oidcIssuer.replace(/\/$/, ''); // sin barra final
-/**  config OIDC (endpoints manuales de WSO2) */
+const base = environment.oidcIssuer.replace(/\/$/, '');
+// Configuración de OAuth2 OIDC
 const authConfig: AuthConfig = {
    loginUrl:        `${base}/authorize`,
   tokenEndpoint:   `${base}/token`,
   userinfoEndpoint:`${base}/userinfo`,
   revocationEndpoint: `${base}/revoke`,
-  logoutUrl:       `${base.replace(/\/oauth2$/, '')}/oidc/logout`, // ruta OIDC
-
+  logoutUrl:       `${base.replace(/\/oauth2$/, '')}/oidc/logout`,
   redirectUri: `${environment.appBaseUrl}/callback`,
-
   clientId: environment.oidcClientId ?? 'o2B5f_ZslC19ctDZvL9tYxKUUNoa',
   responseType: 'code',
   scope: 'openid email profile',
@@ -47,7 +45,7 @@ const authConfig: AuthConfig = {
   strictDiscoveryDocumentValidation: false,
   requireHttps: true,
 };
-
+// Almacén de tokens adaptado a SSR
 function storageFactory(pid: Object): OAuthStorage {
   if (!isPlatformBrowser(pid)) {
     return {
@@ -58,7 +56,7 @@ function storageFactory(pid: Object): OAuthStorage {
   }
   return localStorage;
 }
-
+// Inicialización de OAuth al arrancar la app
 function oauthInitFactory(oauth: OAuthService, pid: Object, auth: AuthService) {
   return async () => {
     oauth.configure(authConfig);
@@ -69,7 +67,6 @@ function oauthInitFactory(oauth: OAuthService, pid: Object, auth: AuthService) {
     }
   };
 }
-
 
 export const appConfig: ApplicationConfig = {
   providers: [

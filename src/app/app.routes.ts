@@ -6,23 +6,20 @@ import { inject, PLATFORM_ID, Component } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { LoginSimulacionComponent } from './pages/login-simulado/login-simulado';
 
+// Para optimizacion
 const loadCallback   = () => import('./pages/callback/callback-page').then(m => m.CallbackPage);
 const loadSignedOut  = () => import('./pages/cerrar/cerrar-page').then(m => m.CerrarPage);
 
+// Stub para evitar errores en SSR
 @Component({ standalone: true, template: `Procesando login…` })
 class CallbackStubComponent {}
 
 export const routes: Routes = [
   { path: 'callback', loadComponent: loadCallback, canMatch: [() => isPlatformBrowser(inject(PLATFORM_ID))] },
   { path: 'callback', component: CallbackStubComponent },
-
-
   { path: 'cerrar', loadComponent: loadSignedOut },
-
-
   { path: 'login-simulado', component: LoginSimulacionComponent },
-
-  { path: '', component: CatalogoPage },
+  { path: '', component: CatalogoPage }, // Página principal es catalogo
   { path: 'carrito', component: CarritoPage },
   { path: 'envio', component: EnvioPage },
   { path: '**', redirectTo: '' },

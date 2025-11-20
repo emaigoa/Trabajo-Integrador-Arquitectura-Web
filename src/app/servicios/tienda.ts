@@ -3,7 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Firestore, collection, collectionData, query, orderBy } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 
-// Dejamos tu interfaz Product IDÉNTICA
+// Definimos las interfaces para los datos de la tienda
 export interface Product {
   id:string;
   name:string;
@@ -15,7 +15,7 @@ export interface Product {
 
 export interface Category { id:string; name:string; }
 
-// ACTUALIZACIÓN: Hacemos la interfaz Promo más simple
+// Nueva interfaz para promociones
 export interface Promo {
   id:string;
   title:string;          // ej: "Promo Verano" o "50% OFF"
@@ -29,21 +29,21 @@ export class StoreService {
   private platformId = inject(PLATFORM_ID);
   private fs: Firestore | null = isPlatformBrowser(this.platformId) ? inject(Firestore) : null;
 
-  // El resto de tu servicio (getProducts, getCategories, getPromos)
-  // queda EXACTAMENTE IGUAL que como lo tenías.
-
+  // Obtener productos desde Firestore
   getProducts(): Observable<Product[]> {
     if (!this.fs) return of([]);
     const ref = collection(this.fs, 'products');
     return collectionData(query(ref, orderBy('name')), { idField: 'id' }) as Observable<Product[]>;
   }
 
+  // Obtener categorías desde Firestore
   getCategories(): Observable<Category[]> {
     if (!this.fs) return of([]);
     const ref = collection(this.fs, 'categories');
     return collectionData(ref, { idField: 'id' }) as Observable<Category[]>;
   }
 
+  // Obtener promociones desde Firestore
   getPromos(): Observable<Promo[]> {
     if (!this.fs) return of([]);
     const ref = collection(this.fs, 'promos');

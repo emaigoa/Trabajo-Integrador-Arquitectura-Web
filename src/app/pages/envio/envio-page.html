@@ -1,10 +1,11 @@
 <h3 class="mb-3">Checkout - Envío</h3>
 
-@if (step() === 'direccion') {
+@if (step() === 'direccion') { <!--Dividido en pasos en misma page, primero direccion-->
   <div class="card mb-3">
     <div class="card-body">
       <h5 class="card-title">Dirección de entrega</h5>
 
+      <!-- Selección de país desde API-->
 <div class="mb-2">
   <label class="form-label">País</label>
   <select class="form-select"
@@ -14,7 +15,7 @@
     }
   </select>
 </div>
-
+<!-- Ingreso de dirección y envia a API-->
 <div class="mb-2 position-relative">
   <label class="form-label">Ingresá tu dirección</label>
   <input class="form-control"
@@ -23,7 +24,7 @@
          placeholder="Ej: Av. Colón 1234, Mar del Plata">
 
 
-        <!-- SUGERENCIAS -->
+        <!-- SUGERENCIAS de API-->
         @if (addressSuggestions().length > 0) {
           <ul class="list-group position-absolute w-100 mt-1" style="z-index: 10;">
             @for (option of addressSuggestions(); track option) {
@@ -61,7 +62,7 @@
   </div>
 }
 
-<!--  Resumen de carrito + envío -->
+<!--2do Paso resumen de compra-->
 @if (step() === 'resumen' && quote()) {
 
   <div class="card mb-3">
@@ -94,9 +95,9 @@
 
         <div class="mb-1">
           <strong>Costo de envío:</strong>
-          $ {{ quote()?.price | number:'1.2-2' }}
+          $ {{ quote()?.price | number:'1.2-2' }} <!-- Precio desde API -->
           <span class="text-muted small">
-            ({{ quote()?.distanceKm }} km, aprox. {{ quote()?.etaHours }} hs)
+            ({{ quote()?.distanceKm }} km, aprox. {{ quote()?.etaHours }} hs) <!-- Detalles desde API -->
           </span>
         </div>
 
@@ -118,7 +119,7 @@
   </div>
 }
 
-<!-- Envío confirmado -->
+<!-- Ultimo paso, envío confirmado -->
 @if (step() === 'confirmado' && quote()) {
   <div class="alert alert-success mt-3">
     <h5 class="alert-heading">¡Envío confirmado!</h5>

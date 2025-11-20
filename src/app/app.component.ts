@@ -1,11 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
-// importa tus componentes reales (mirá tus rutas)
+// Importa tus componentes reales
 import { EncabezadoComponent } from './componentes/encabezado/encabezado';
 import { FooterComponent } from './componentes/footer/footer';
 
-// servicio de auth
+// Servicio de auth
 import { AuthService } from './servicios/autenticacion';
 
 @Component({

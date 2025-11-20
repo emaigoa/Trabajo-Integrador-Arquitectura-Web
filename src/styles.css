@@ -1,11 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import "bootstrap/dist/css/bootstrap.min.css";
 
-/*
- * 6. DEFINICIÓN GLOBAL DE KEYFRAMES
- * Se mueve aquí desde tarjeta.ts para evitar problemas
- * con la Encapsulación de Estilos de Angular.
- */
 @keyframes fade-and-rise {
   0% {
     opacity: 1;

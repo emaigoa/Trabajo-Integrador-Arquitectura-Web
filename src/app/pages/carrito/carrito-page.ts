@@ -14,6 +14,5 @@ import { AuthStateService } from '../../servicios/estado-auten';
 export class CarritoPage {
   protected cart = inject(CartService);
   protected authState = inject(AuthStateService);
-  // AÑADE ESTA LÍNEA: Exponer Math para el template
   protected Math = Math;
 }

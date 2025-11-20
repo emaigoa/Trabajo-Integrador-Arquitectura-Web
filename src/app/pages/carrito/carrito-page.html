@@ -1,11 +1,12 @@
 <h3 class="mb-3">Carrito de Compras</h3>
 
+<!-- Si el carrito está vacío, mostrar mensaje -->
 @if (cart.items().length === 0) {
   <div class="alert alert-info">
     No hay productos en el carrito.
     <a routerLink="/">Ir al catálogo</a>
   </div>
-} @else {
+} @else { <!-- Si hay productos, mostrar lista -->
   <ul class="list-group mb-3">
     @for (cartItem of cart.items(); track cartItem.product.id) {
       <li class="list-group-item d-flex align-items-center">
@@ -17,7 +18,7 @@
           @if (cartItem.product.img) {
             <img [src]="cartItem.product.img" [alt]="cartItem.product.name"
                  class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;">
-          } @else {
+          } @else { <!-- Imagen por defecto si no hay -->
             <div class="rounded me-3 bg-light d-flex align-items-center justify-content-center"
                  style="width: 60px; height: 60px; font-size: 0.8em; color: #aaa;">
               (sin foto)
@@ -124,15 +125,16 @@
         </div>
       }
     </div>
+    <!-- Botón de Iniciar Compra -->
     @if (authState.isLoggedIn()) {
     <a class="btn btn-primary" routerLink="/envio">Iniciar compra</a>
-    } @else {
+    } @else { <!-- Si no inició sesión, botón deshabilitado con hover info -->
     <div class="hover-wrapper">
     <a class="btn btn-secondary disabled-btn">
       Iniciar compra
     </a>
 
-    <!-- Cartel flotante -->
+    <!-- Cartel flotante si no inicio sesion -->
     <div class="hover-card">
       Debes iniciar sesión para continuar
     </div>

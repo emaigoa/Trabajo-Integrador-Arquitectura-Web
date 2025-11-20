@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+// Definimos la interfaz para la cotización de envío
 export interface ShippingQuote {
   price: number;
   distanceKm: number;
@@ -17,17 +18,13 @@ export class ShippingService {
   private http = inject(HttpClient);
   private orsKey = environment.orsKey;
 
-  // Coordenadas ficticias de tu MiniMarket en Mar del Plata
+  // Coordenadas ficticias (Se puede modificar)
   private STORE = {
     lon: -57.55123,
     lat: -38.00612,
   };
 
-  /**
-   * Calcula el envío usando ORS Distance Matrix.
-   * addressCoords: coordenadas del cliente
-   * subtotal: total de productos (por si querés usarlo en tu lógica)
-   */
+  // Obtiene una cotización de envío usando OpenRouteService API
   getQuote(addressCoords: { lat: number; lon: number }, subtotal: number): Observable<ShippingQuote> {
 
     const url = 'https://api.openrouteservice.org/v2/matrix/driving-car';
@@ -53,7 +50,7 @@ export class ShippingService {
         const duracionSeg = res.durations[0][1];
         const etaHoras = duracionSeg / 3600;
 
-        // 🎯 Regla de negocio simple de ejemplo
+        // Lógica simple de precios según distancia (Se puede ampliar a mayores distancias)
         const price =
           distanciaKm < 3 ? 800 :
           distanciaKm < 7 ? 1500 :
@@ -63,7 +60,7 @@ export class ShippingService {
           price,
           distanceKm: Number(distanciaKm.toFixed(2)),
           etaHours: Number(etaHoras.toFixed(2)),
-          carrier: 'Correo La Costa',
+          carrier: 'Correo La Costa', // Ejemplo de carrier
         } as ShippingQuote;
       })
     );

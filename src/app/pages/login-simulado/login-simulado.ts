@@ -33,6 +33,7 @@ export class LoginSimulacionComponent {
     this.email.set('');
   }
 
+
   submitLogin() {
     const user = this.username().trim();
     const mail = this.email().trim();
@@ -41,6 +42,7 @@ export class LoginSimulacionComponent {
     this.mensaje.set('');
     this.dataEnviada.set(null);
 
+    // Validaciones simples
     if (!user || !mail) {
       this.errorMensaje.set('Debe completar ambos campos.');
       return;
@@ -51,13 +53,14 @@ export class LoginSimulacionComponent {
       return;
     }
 
+    // Simulación de login exitoso en consola
     console.log('--- SIMULACIÓN DE LOGIN EXITOSO ---', { username: user, email: mail });
 
     this.mensaje.set(`Hola ${mail}! Login exitoso.`);
     this.dataEnviada.set({ username: user, email: mail });
 
-    this.simAuth.login(user, mail);
+    this.simAuth.login(user, mail); //Registra el login en el servicio
 
-    this.reset();
+    this.reset(); // Limpia el formulario tras el inicio
   }
 }

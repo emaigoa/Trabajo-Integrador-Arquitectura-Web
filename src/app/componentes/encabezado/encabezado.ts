@@ -1,4 +1,3 @@
-// encabezado.ts
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -14,7 +13,7 @@ import { AuthService } from '../../servicios/autenticacion';   //
   styleUrls: ['./encabezado.css']
 })
 export class EncabezadoComponent {
-
+// Servicios
   cart = inject(CartService);
   authState = inject(AuthStateService);
   authWso2 = inject(AuthService);   //

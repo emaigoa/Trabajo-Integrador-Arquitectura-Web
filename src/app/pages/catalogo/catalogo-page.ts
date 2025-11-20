@@ -15,9 +15,11 @@ import { tap, take } from 'rxjs/operators';
   styleUrl: './catalogo-page.css'
 })
 export class CatalogoPage implements OnInit {
+  // Servicios
   private store = inject(StoreService);
   private cart = inject(CartService);
 
+  // Señales
   loading = signal(true);
   vacias = Array.from({ length: 12 });
   products = signal<Product[]>([]);
@@ -26,16 +28,18 @@ export class CatalogoPage implements OnInit {
   query = signal('');
   selectedCategory = signal<string | null>(null);
 
+  //Traigo productos, categorias y promociones al iniciar
   ngOnInit(): void {
-    const products$   = this.store.getProducts().pipe(tap(d => this.products.set(d)));
+    const products$   = this.store.getProducts().pipe(tap(d => this.products.set(d))); //Guarda productos en señal
     const categories$ = this.store.getCategories().pipe(tap(c => this.categories.set(c)));
     const promos$     = this.store.getPromos().pipe(tap(p => this.promos.set(p)));
 
-    combineLatest([products$, categories$, promos$]).pipe(take(1)).subscribe(() => {
+    combineLatest([products$, categories$, promos$]).pipe(take(1)).subscribe(() => { //Cuando al menos uno emite, se suscribe y setea loading en false
       this.loading.set(false);
     });
   }
 
+  //Búsqueda y filtro computado
   filtered = computed(() => {
     const q = this.query().toLowerCase().trim();
     const cat = this.selectedCategory();
@@ -44,10 +48,12 @@ export class CatalogoPage implements OnInit {
     );
   });
 
+  // Selección de categoría
   selectCat(c?: string){
     this.selectedCategory.set(c ?? null);
   }
 
+  // Agregar al carrito con lógica de promociones
   addToCart(p: Product){
     const promo = this.promos().find(pr => pr.categoryName === p.category);
 
@@ -57,7 +63,7 @@ export class CatalogoPage implements OnInit {
       return;
     }
 
-    // manejo de promocion 2x1
+    // Manejo de promocion 2x1
     if (promo.promoType === '2x1') {
       const productWith2x1 = {
         ...p,
@@ -68,7 +74,7 @@ export class CatalogoPage implements OnInit {
       return;
     }
 
-    // manejo de descuento porcentual
+    // Manejo de descuento porcentual
     if (promo.discount) {
       const discountAmount = p.price * (promo.discount / 100);
       const newPrice = parseFloat((p.price - discountAmount).toFixed(2));
@@ -84,7 +90,7 @@ export class CatalogoPage implements OnInit {
       return;
     }
 
-    // sin descuento aplicable
+    // Sin descuento aplicable
     this.cart.add(p);
   }
 }

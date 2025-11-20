@@ -2,6 +2,7 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { CartService } from './carrito';
 import { Router } from '@angular/router';
 
+// Definimos la interfaz para el usuario
 export interface SimUser {
   username: string;
   email: string;
@@ -12,7 +13,7 @@ export class SimLoginService {
   private router = inject(Router);
   private _user = signal<SimUser | null>(null);
   private cart = inject(CartService);
-  // nombre que va a mostrar el encabezado
+  // Nombre que va a mostrar el encabezado
   readonly displayName = computed(() => {
     const u = this._user();
     if (!u) return '';

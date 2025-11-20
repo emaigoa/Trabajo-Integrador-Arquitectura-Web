@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+// Definimos la interfaz para las coordenadas de una dirección
 export interface AddressCoords {
   lat: number;
   lon: number;
@@ -15,13 +16,13 @@ export class AddressService {
 
   private http = inject(HttpClient);
 
-  // 🔑 NUEVO: clave de Postcoder
+  // Usamos Postcoder para autocompletar direcciones
   private postcoderKey = environment.postcoderKey;
 
-  // 🔑 seguimos usando Geoapify SOLO para geocodificar (lat/lon)
+  // Usamos Geoapify para obtener coordenadas de una dirección
   private geoapifyKey = environment.geoapifyKey;
 
-  /** Autocompleta direcciones usando Postcoder */
+  // Autocompleta direcciones usando Postcoder
   search(term: string, countryCode: string = 'AR'): Observable<string[]> {
   if (!term || term.length < 3) {
     return of([]);
@@ -44,7 +45,7 @@ export class AddressService {
 }
 
 
-  /** Obtiene coordenadas (lat, lon) para una dirección (sigue con Geoapify) */
+  // Obtiene coordenadas (lat, lon) para una dirección (Geoapify API)
   getCoords(address: string): Observable<AddressCoords> {
     const url = 'https://api.geoapify.com/v1/geocode/search';
 

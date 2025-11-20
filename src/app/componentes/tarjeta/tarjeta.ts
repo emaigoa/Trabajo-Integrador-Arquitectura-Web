@@ -16,7 +16,7 @@ export class ProductCardComponent {
 
   showPlusOne = signal(false);
 
-  // Signal computada para encontrar la promo aplicable
+  // Señal computada para encontrar la promo aplicable
   applicablePromo = computed(() => {
     if (!this.product || !this.promos) {
       return null;
@@ -24,7 +24,7 @@ export class ProductCardComponent {
     return this.promos.find(p => p.categoryName === this.product.category) || null;
   });
 
-  // Signal computada para calcular el precio con descuento (solo para descuentos %)
+  // Señal computada para calcular el precio con descuento (solo para descuentos %)
   discountedPrice = computed(() => {
     const promo = this.applicablePromo();
 

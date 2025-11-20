@@ -1,13 +1,13 @@
-// src/app/servicios/carrito.ts
 import { Injectable, computed, signal, effect } from '@angular/core';
 import type { Product } from './tienda';
 
+// Definimos la interfaz para los ítems del carrito
 export interface CartItem {
   product: Product;
   quantity: number;
   originalPrice?: number;
   promoInfo?: string;
-  promoType?: string;  // '2x1', '3x2', 'percentage', etc.
+  promoType?: string;
 }
 
 const STORAGE_KEY = 'minimarket-cart';
@@ -16,7 +16,7 @@ const STORAGE_KEY = 'minimarket-cart';
 export class CartService {
   readonly items = signal<CartItem[]>([]);
 
-  // Total con lógica de 2x1 (podés extender para otros tipos de promo)
+  // Total con lógica de 2x1
   readonly total = computed(() =>
     this.items().reduce((sum, item) => {
       const price = item.product.price;
@@ -39,8 +39,8 @@ export class CartService {
   );
 
   constructor() {
-    // Evitamos romper SSR: sólo tocamos window/localStorage en el browser
     if (typeof window !== 'undefined') {
+      // Cargar estado inicial desde localStorage
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (raw) {
         try {
@@ -60,9 +60,10 @@ export class CartService {
     }
   }
 
+  // Agregar producto al carrito
   add(p: Product & { originalPrice?: number; promoInfo?: string; promoType?: string }) {
     const existingItem = this.items().find(item => item.product.id === p.id);
-
+    // Si ya existe, aumentamos cantidad
     if (existingItem) {
       this.items.update(items =>
         items.map(item =>
@@ -71,7 +72,7 @@ export class CartService {
             : item
         )
       );
-    } else {
+    } else { // Si no existe, lo agregamos
       this.items.update(items => [
         ...items,
         {
@@ -85,10 +86,12 @@ export class CartService {
     }
   }
 
+  // Disminuir cantidad de un producto
   decrease(id: string) {
     const existingItem = this.items().find(item => item.product.id === id);
     if (!existingItem) return;
 
+    // Si la cantidad es 1, lo removemos completamente
     if (existingItem.quantity === 1) {
       this.removeItemCompletely(id);
     } else {
@@ -102,10 +105,12 @@ export class CartService {
     }
   }
 
+  // Remover un producto completamente del carrito
   removeItemCompletely(id: string) {
     this.items.update(items => items.filter(item => item.product.id !== id));
   }
 
+  // Vaciar el carrito
   clear() {
     this.items.set([]);
     if (typeof window !== 'undefined') {

@@ -1,7 +1,6 @@
 <div class="row g-3 align-items-center mb-3">
   <div class="col-md-5">
-    <!-- El ngModel aquí debe ser 'query' (Signal), no '[(ngModel)]' -->
-    <!-- Asumiendo que usas el estilo de Signals (como en el login simulado): -->
+<!--Buscador, y categorias-->
     <input class="form-control"
            placeholder="Buscar productos..."
            [value]="query()"
@@ -19,12 +18,12 @@
   </div>
 </div>
 
+<!-- Si aun no cargaron los productos, mostramos placeholders -->
 
 @if (loading()) {
   <div class="row row-cols-2 row-cols-md-6 g-3">
     @for (v of vacias; track v)  {
       <div class="col">
-        <!-- ... (tu HTML de 'loading placeholder' va aquí) ... -->
         <div class="card h-100">
            <img src="load.gif" class="card-img-top p-4" alt="Cargando...">
           <div class="card-body">
@@ -42,14 +41,10 @@
       </div>
     }
   </div>
-} @else {
+} @else { <!-- Sino mostrar tarjetas, con producto, promo y boton con funcion-->
   <div class="tarj row row-cols-2 row-cols-md-6 g-3">
   @for (p of filtered(); track p.id) {
     <div class="col">
-      <!--
-        AQUÍ ESTÁ LA ACTUALIZACIÓN CRÍTICA:
-        Debemos pasar [promos]="promos()" a la tarjeta.
-      -->
       <app-product-card
         [product]="p"
         [promos]="promos()"
