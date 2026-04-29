@@ -1,59 +1,120 @@
-# MiniECommerce
+# Mini E-Commerce
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.7.
+Aplicacion web de mini market desarrollada con Angular. Permite consultar un catalogo de
+productos, filtrar por categorias, aplicar promociones, gestionar un carrito, iniciar sesion y
+calcular un envio antes de confirmar la compra.
 
-## Development server
+## Sitio desplegado
 
-To start a local development server, run:
-
-```bash
-ng serve
+```text
+https://miniecommercearqweb.netlify.app
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Tecnologias
 
-## Code scaffolding
+- Angular 20
+- TypeScript
+- Bootstrap 5
+- Firebase / Firestore
+- Angular OAuth2 OIDC
+- Angular SSR
+- Netlify
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Funcionalidades
 
-```bash
-ng generate component component-name
-```
+- Catalogo de productos obtenido desde Firestore.
+- Filtro por categoria y busqueda por nombre.
+- Promociones por categoria, incluyendo descuentos porcentuales y 2x1.
+- Carrito persistido en `localStorage`.
+- Flujo de envio con busqueda de direccion, geolocalizacion y cotizacion.
+- Autenticacion OIDC con WSO2 / Asgardeo.
+- Login simulado para pruebas locales.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Requisitos
 
-```bash
-ng generate --help
-```
+- Node.js compatible con Angular 20.
+- npm.
+- Angular CLI instalado globalmente o ejecutado con `npx`.
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## Instalacion
 
 ```bash
-ng test
+npm install
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+## Desarrollo
 
 ```bash
-ng e2e
+npm start
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+La aplicacion queda disponible en:
 
-## Additional Resources
+```text
+http://localhost:4200
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Build
+
+```bash
+npm run build
+```
+
+Los archivos compilados se generan en `dist/mini-e-commerce/`.
+
+## SSR
+
+Despues de compilar, se puede levantar el servidor SSR con:
+
+```bash
+npm run serve:ssr:mini-e-commerce
+```
+
+## Tests
+
+```bash
+npm test
+```
+
+## Configuracion
+
+La configuracion de Firebase, OIDC y APIs externas esta en:
+
+- `src/environments/environment.ts`
+- `src/environments/environment.prod.ts`
+
+Para desarrollo local, revisar especialmente:
+
+- `oidcIssuer`
+- `oidcClientId`
+- `appBaseUrl`
+- claves de APIs externas
+
+## Despliegue
+
+El proyecto incluye configuracion para Netlify:
+
+- `netlify.toml`
+- `public/_redirects`
+
+URL de produccion:
+
+```text
+https://miniecommercearqweb.netlify.app
+```
+
+El directorio publicado configurado es:
+
+```text
+dist/mini-e-commerce/browser
+```
+
+## Estructura principal
+
+```text
+src/app/componentes   Componentes reutilizables
+src/app/pages         Pantallas de la aplicacion
+src/app/servicios     Servicios de negocio, datos, autenticacion y envio
+src/environments      Configuracion por entorno
+public                Assets publicos y redirects
+```
